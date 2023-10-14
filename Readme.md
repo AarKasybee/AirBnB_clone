@@ -3,7 +3,7 @@
 This project aims to build an AirBnB replica using Python, HTML, CSS, Java,
 APIs, database storage and Front-end integration.
 
-The first Part is the building of the Console or interpreter.
+The first Part is the building of the Console or command interpreter.
 The work of this command line interpreter is to manage the objects of this
 AirBnB project.
 
@@ -13,6 +13,7 @@ Functions of the line interpreter in this project
 3. Performing operations on objects e.g. count, compute stats, etc...
 4. Updating attributes of an object
 5. Destroying an object
+
 
 Tasks
 - put in place a parent class (called BaseModel) to take care of the
