@@ -40,9 +40,19 @@ class FileStorage(object):
         """
         if self.__file_path is not None:
 
-            with open(self.__file_path) as f:
-                new_dict = json.loads(f)
-                for value in new_dict.value():
-                    name = value['__class__']
-                    del value['__class__']
-                    self.new(eval(name)(**value))
+            try:
+                with open(self.__file_path) as f:
+                    from models.base_model import BaseModel
+                    from models.user import User
+                    from models.state import State
+                    from models.city import City
+                    from models.amenity import Amenity
+                    from models.place import Place
+                    from models.review import Review
+                    new_dict = json.loads(f.read())
+                    for key, value in new_dict.value():
+                        class_name = value.get("__class__")
+                        obj = eval(class_name + "(**value)")
+                        FileStorage.__objects[key] = obj
+            except IOError:
+                pass
