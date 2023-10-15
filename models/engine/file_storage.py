@@ -30,8 +30,11 @@ class FileStorage(object):
 
         :rtype: object
         """
+        new = {}
         with open(self.__file_path, "w") as my_file:
-            my_file.write(json.dumps(FileStorage.__objects.items()))
+            for k, v in FileStorage.__objects.items():
+                new.update({k: v.to_dict()})
+            my_file.write(json.dumps(new))
 
     def reload(self):
         """deserializes the JSON file to __objects

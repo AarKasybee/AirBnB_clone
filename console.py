@@ -2,9 +2,16 @@
 import cmd
 
 from models import storage
+from models.amenity import Amenity
 from models.base_model import BaseModel
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
 
-classes = {"BaseModel": BaseModel}
+classes = {"BaseModel": BaseModel, "Amenity": Amenity, "City": City, "Place": Place
+           ,"Review": Review, "State": State, "User": User}
 
 
 class HBNBCommand(cmd.Cmd):
@@ -29,12 +36,12 @@ class HBNBCommand(cmd.Cmd):
 
         arg = args.split()
 
-        if arg <= 0:
+        if len(arg) <= 0:
             print('** class name missing **')
 
         if arg in classes:
             for key, value in classes.items():
-                if args[0] == key:
+                if arg[0] == key:
                     new_instance = value()
                     print(new_instance.id)
                     new_instance.save()
@@ -46,13 +53,13 @@ class HBNBCommand(cmd.Cmd):
            based on the class name and id"""
         arg = args.split()
         new_dict = storage.all()
-        if arg <= 0:
+        if len(arg) <= 0:
             print('** class name missing **')
-        elif arg != 2:
+        elif len(arg) != 2:
             print('** instance id missing **')
-        elif arg in classes:
-            if args[0]+"."+args[1] in new_dict:
-                print(new_dict[args[0] + "." + args[1]])
+        elif len(arg) in classes:
+            if arg[0]+"."+arg[1] in new_dict:
+                print(new_dict[arg[0] + "." + arg[1]])
             else:
                 print("** no instance found **")
         else:
@@ -63,13 +70,13 @@ class HBNBCommand(cmd.Cmd):
         based on the class name and id"""
         arg = args.split()
         new_dict = storage.all()
-        if arg <= 0:
+        if len(arg) <= 0:
             print('** class name missing **')
-        elif arg != 2:
+        elif len(arg) != 2:
             print('** instance id missing **')
         elif arg in classes:
-            if args[0] + "." + args[1] in new_dict:
-                new_dict().pop(args[0] + "." + args[1])
+            if arg[0] + "." + arg[1] in new_dict:
+                new_dict().pop(arg[0] + "." + arg[1])
                 storage.save(new_dict)
             else:
                 print("** no instance found **")
@@ -82,9 +89,9 @@ class HBNBCommand(cmd.Cmd):
         new_dict = storage.all()
         all_instance = []
         if arg in classes:
-            if args[0] + "." + args[1] in new_dict:
-                print(new_dict[args[0] + "." + args[1]])
-        elif arg == 0:
+            if arg[0] + "." + arg[1] in new_dict:
+                print(new_dict[arg[0] + "." + arg[1]])
+        elif len(args) == 0:
             for key in new_dict:
                 all_instance.append(new_dict[key].__str__())
             print(all_instance)
@@ -122,3 +129,6 @@ class HBNBCommand(cmd.Cmd):
                     v = float(v)
             setattr(storage.all()[k], attr, v)
             storage.all()[k].save()
+
+if __name__ == '__main__':
+    HBNBCommand().cmdloop()
