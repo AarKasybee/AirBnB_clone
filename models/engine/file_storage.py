@@ -53,7 +53,7 @@ class FileStorage(object):
                     from models.place import Place
                     from models.review import Review
                     new_dict = json.loads(f.read())
-                    for key, value in new_dict.value():
+                    for key, value in new_dict.items():
                         class_name = value.get("__class__")
                         obj = eval(class_name + "(**value)")
                         FileStorage.__objects[key] = obj

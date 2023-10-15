@@ -15,31 +15,28 @@ classes = {"BaseModel": BaseModel, "Amenity": Amenity, "City": City, "Place": Pl
 
 
 class HBNBCommand(cmd.Cmd):
-    prompt = '(hnhb)'
+    prompt = '(hbnb) '
 
     def do_quit(self, arg):
-        """Exits CLI
-
-        @rtype: object
+        """Quit command to exit the program.
         """
         print()
         return True
 
-    def do_eof(self, arg):
-        """Exits CLI
-
-        @rtype: object
+    def do_EOF(self, arg):
+        """EOF signal to exit the program.
         """
         return True
 
     def do_create(self, args):
-
+        """Create a new class instance and print its id.
+        """
         arg = args.split()
 
         if len(arg) <= 0:
             print('** class name missing **')
 
-        if arg in classes:
+        elif arg[0] in classes:
             for key, value in classes.items():
                 if arg[0] == key:
                     new_instance = value()
@@ -49,15 +46,16 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, args):
-        """prints the string representation of an instance
-           based on the class name and id"""
+        """Display the string representation of a class instance of a given id.
+        """
+
         arg = args.split()
         new_dict = storage.all()
-        if len(arg) <= 0:
+        if len(arg) == 0:
             print('** class name missing **')
         elif len(arg) != 2:
             print('** instance id missing **')
-        elif len(arg) in classes:
+        elif arg[0] in classes:
             if arg[0]+"."+arg[1] in new_dict:
                 print(new_dict[arg[0] + "." + arg[1]])
             else:
@@ -66,25 +64,28 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_destroy(self, args):
-        """destroys the instance
-        based on the class name and id"""
+        """Delete a class instance of a given id.
+        """
         arg = args.split()
         new_dict = storage.all()
         if len(arg) <= 0:
             print('** class name missing **')
         elif len(arg) != 2:
             print('** instance id missing **')
-        elif arg in classes:
+        elif arg[0] in classes:
             if arg[0] + "." + arg[1] in new_dict:
-                new_dict().pop(arg[0] + "." + arg[1])
-                storage.save(new_dict)
+                storage.all().pop(arg[0] + "." + arg[1])
+                storage.save()
             else:
                 print("** no instance found **")
         else:
             print("** class doesn't exist **")
 
     def do_all(self, args):
-
+        """Display string representations of all instances of a given class
+        If no class is specified, displays all instantiated
+        objects.
+        """
         arg = args.split
         new_dict = storage.all()
         all_instance = []
@@ -99,12 +100,16 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_update(self, args):
-
-        arg = args.split
+        """Usage: update <class> <id> <attribute_name> <attribute_value> or
+        <class>.update(<id>, <attribute_name>, <attribute_value
+        >) or <class>.update(<id>, <dictionary>)
+        Update a class instance of a given id by adding or updating
+        a given attribute key/value pair or dictionary.
+        """
+        arg = args.split()
         new_dict = storage.all()
-
-        if len(arg) == 0:
-            print("** class name missing **")
+        if len(arg) <= 0:
+            print('** class name missing **')
         elif arg[0] not in classes:
             print("** class doesn't exist **")
         elif len(arg) < 2:
@@ -118,13 +123,14 @@ class HBNBCommand(cmd.Cmd):
         else:
             k = arg[0] + "." + arg[1]
             attr = arg[2]
-            v = arg[3].replace('"', ' ')
+            v = arg[3].replace("'", "")
+            v = v.replace('"', '')
             instance = new_dict[k]
             if hasattr(instance, attr) and type(getattr(instance, attr)) is int:
                 if v.isnumeric():
                     v = int(v)
             elif hasattr(instance, attr) and type(getattr(instance, attr)) is float:
-                idk = args[3].split(".")
+                idk = v.split(".")
                 if idk[0].isnumeric() and idk[1].isnumeric():
                     v = float(v)
             setattr(storage.all()[k], attr, v)
