@@ -59,3 +59,4 @@ class FileStorage(object):
                         FileStorage.__objects[key] = obj
             except IOError:
                 pass
+            return
