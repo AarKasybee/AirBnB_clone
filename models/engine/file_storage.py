@@ -1,7 +1,13 @@
 #!/usr/bin/python3
 """Define class FileStorage"""
 import json
-
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 class FileStorage(object):
     """Define class FileStorage"""
@@ -45,18 +51,11 @@ class FileStorage(object):
 
             try:
                 with open(self.__file_path) as f:
-                    from models.base_model import BaseModel
-                    from models.user import User
-                    from models.state import State
-                    from models.city import City
-                    from models.amenity import Amenity
-                    from models.place import Place
-                    from models.review import Review
                     new_dict = json.loads(f.read())
                     for key, value in new_dict.value():
                         class_name = value.get("__class__")
+                        del o["__class__"]
                         obj = eval(class_name + "(**value)")
                         FileStorage.__objects[key] = obj
             except IOError:
                 pass
-            return
